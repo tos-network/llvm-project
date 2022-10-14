@@ -1089,6 +1089,7 @@ public:
   }
 
   /// Tests whether the target is eBPF.
+  /// TODO/TBD: For new sbf backend, we should probably remove sbf check here.
   bool isBPF() const {
     return getArch() == Triple::bpfel || getArch() == Triple::bpfeb;
   }
@@ -1107,6 +1108,11 @@ public:
            Env == llvm::Triple::GNUEABIHFT64 ||
            Env == llvm::Triple::MuslEABIHF ||
            Env == llvm::Triple::EABIHF;
+  }
+
+  /// Tests whether the target is SBF (little endian).
+  bool isSBF() const {
+    return getArch() == Triple::sbf;
   }
 
   /// Tests whether the target supports comdat
