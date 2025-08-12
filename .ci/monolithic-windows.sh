@@ -50,8 +50,8 @@ echo "--- cmake"
 pip install -q -r "${MONOREPO_ROOT}"/mlir/python/requirements.txt
 pip install -q -r "${MONOREPO_ROOT}"/.ci/requirements.txt
 
-export CC=cl
-export CXX=cl
+export CC=clang
+export CXX=clang++
 export LD=link
 
 # The CMAKE_*_LINKER_FLAGS to disable the manifest come from research
