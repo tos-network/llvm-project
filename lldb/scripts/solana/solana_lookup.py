@@ -1,12 +1,12 @@
-from solana_providers import *
-from solana_types import SolanaType, classify_solana_type
+from tos_providers import *
+from tos_types import tosType, classify_tos_type
 
 
 def summary_lookup(valobj, dict):
     # type: (SBValue, dict) -> str
     """Returns the summary provider for the given value"""
-    solana_type = classify_solana_type(valobj.GetType())
-    if solana_type == SolanaType.PUBKEY:
+    tos_type = classify_tos_type(valobj.GetType())
+    if tos_type == tosType.PUBKEY:
         return PubkeySummaryProvider(valobj, dict)
-    if solana_type == SolanaType.ACCOUNT_INFO:
+    if tos_type == tosType.ACCOUNT_INFO:
         return AccountInfoSummaryProvider(valobj, dict)

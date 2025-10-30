@@ -71,7 +71,7 @@ void BPFTargetInfo::getTargetDefines(const LangOptions &Opts,
     Builder.defineMacro("__BPF_FEATURE_ST");
   }
   
-  if (HasSolanaFeature) {
+  if (HastosFeature) {
     Builder.defineMacro("__ELF__");
   }
 }

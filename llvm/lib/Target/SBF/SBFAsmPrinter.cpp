@@ -63,7 +63,7 @@ bool SBFAsmPrinter::doInitialization(Module &M) {
   AsmPrinter::doInitialization(M);
 
   // Only emit BTF when debuginfo available.
-  // Unsupported for Solana:
+  // Unsupported for tos:
   // https://github.com/anza-xyz/llvm-project/issues/37
   if (MAI->doesSupportDebugInformation() && !M.debug_compile_units().empty() &&
       SBFEnableBTFEmission) {
