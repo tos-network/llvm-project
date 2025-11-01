@@ -46,13 +46,16 @@ jobs:
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
 
-          # Create tag if it doesn't exist (for workflow_dispatch)
-          if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
-            git tag "$VERSION"
+          # For workflow_dispatch, create and push tag
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -a "$VERSION" -m "Release $VERSION"
             git push origin "$VERSION"
           fi
 
-          # Create release
+          # Create release (wait a bit for tag to propagate)
+          sleep 2
           gh release create "$VERSION" \
             --title "Release $VERSION" \
             --notes "## TOS Network LLVM Tools Release $VERSION
@@ -63,8 +66,7 @@ jobs:
           - See commit history for detailed changes
 
           ### Downloads
-          Binary packages for different platforms will be available below." \
-            || echo "Release already exists"
+          Binary packages for different platforms will be available below."
 
   build-linux:
     name: Build Linux (x86_64)
