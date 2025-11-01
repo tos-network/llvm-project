@@ -65,7 +65,7 @@ void elf::setTarget(Ctx &ctx) {
     return setAVRTargetInfo(ctx);
   case EM_BPF:
     return setSBFTargetInfo(ctx);
-  case EM_SBF:
+  case EM_TBF:
     return setSBFTargetInfo(ctx);
   case EM_HEXAGON:
     return setHexagonTargetInfo(ctx);
