@@ -236,7 +236,7 @@ TEST(ELFObjectFileTest, MachineTestForSBF) {
   std::array<StringRef, 4> Formats = {"elf32-unknown", "elf32-unknown",
                                       "elf64-sbf", "elf64-sbf"};
   size_t I = 0;
-  for (const DataForTest &D : generateData(ELF::EM_SBF))
+  for (const DataForTest &D : generateData(ELF::EM_TBF))
     checkFormatAndArch(D, Formats[I++], Triple::sbf);
 }
 

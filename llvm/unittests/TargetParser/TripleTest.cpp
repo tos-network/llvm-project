@@ -751,67 +751,67 @@ TEST(TripleTest, ParsedIDs) {
   EXPECT_EQ(Triple::Linux, T.getOS());
   EXPECT_EQ(Triple::MuslSF, T.getEnvironment());
 
-  T = Triple("sbf-tos-tos");
-  EXPECT_EQ(Triple::sbf, T.getArch());
+  T = Triple("tbf-tos-tos");
+  EXPECT_EQ(Triple::tbf, T.getArch());
   EXPECT_EQ(Triple::tos, T.getVendor());
   EXPECT_EQ(Triple::tosOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbpf-tos-tos");
-  EXPECT_EQ(Triple::sbf, T.getArch());
+  T = Triple("tbpf-tos-tos");
+  EXPECT_EQ(Triple::tbf, T.getArch());
   EXPECT_EQ(Triple::tos, T.getVendor());
   EXPECT_EQ(Triple::tosOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbpfv0-tos-tos");
-  EXPECT_EQ(Triple::sbf, T.getArch());
-  EXPECT_EQ(Triple::SBFSubArch_v0, T.getSubArch());
+  T = Triple("tbpfv0-tos-tos");
+  EXPECT_EQ(Triple::tbf, T.getArch());
+  EXPECT_EQ(Triple::TBFSubArch_v0, T.getSubArch());
   EXPECT_EQ(Triple::tos, T.getVendor());
   EXPECT_EQ(Triple::tosOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbpfv1-tos-tos");
-  EXPECT_EQ(Triple::sbf, T.getArch());
-  EXPECT_EQ(Triple::SBFSubArch_v1, T.getSubArch());
+  T = Triple("tbpfv1-tos-tos");
+  EXPECT_EQ(Triple::tbf, T.getArch());
+  EXPECT_EQ(Triple::TBFSubArch_v1, T.getSubArch());
   EXPECT_EQ(Triple::tos, T.getVendor());
   EXPECT_EQ(Triple::tosOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbpfv2-tos-tos");
-  EXPECT_EQ(Triple::sbf, T.getArch());
-  EXPECT_EQ(Triple::SBFSubArch_v2, T.getSubArch());
+  T = Triple("tbpfv2-tos-tos");
+  EXPECT_EQ(Triple::tbf, T.getArch());
+  EXPECT_EQ(Triple::TBFSubArch_v2, T.getSubArch());
   EXPECT_EQ(Triple::tos, T.getVendor());
   EXPECT_EQ(Triple::tosOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbpfv3-tos-tos");
-  EXPECT_EQ(Triple::sbf, T.getArch());
-  EXPECT_EQ(Triple::SBFSubArch_v3, T.getSubArch());
+  T = Triple("tbpfv3-tos-tos");
+  EXPECT_EQ(Triple::tbf, T.getArch());
+  EXPECT_EQ(Triple::TBFSubArch_v3, T.getSubArch());
   EXPECT_EQ(Triple::tos, T.getVendor());
   EXPECT_EQ(Triple::tosOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbpfv4-tos-tos");
-  EXPECT_EQ(Triple::sbf, T.getArch());
-  EXPECT_EQ(Triple::SBFSubArch_v4, T.getSubArch());
+  T = Triple("tbpfv4-tos-tos");
+  EXPECT_EQ(Triple::tbf, T.getArch());
+  EXPECT_EQ(Triple::TBFSubArch_v4, T.getSubArch());
   EXPECT_EQ(Triple::tos, T.getVendor());
   EXPECT_EQ(Triple::tosOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbf-unknown-unknown");
-  EXPECT_EQ(Triple::sbf, T.getArch());
+  T = Triple("tbf-unknown-unknown");
+  EXPECT_EQ(Triple::tbf, T.getArch());
   EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
   EXPECT_EQ(Triple::UnknownOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbf");
-  EXPECT_EQ(Triple::sbf, T.getArch());
+  T = Triple("tbf");
+  EXPECT_EQ(Triple::tbf, T.getArch());
   EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
   EXPECT_EQ(Triple::UnknownOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
 
-  T = Triple("sbpf");
-  EXPECT_EQ(Triple::sbf, T.getArch());
+  T = Triple("tbpf");
+  EXPECT_EQ(Triple::tbf, T.getArch());
   EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
   EXPECT_EQ(Triple::UnknownOS, T.getOS());
   EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
@@ -1907,11 +1907,11 @@ TEST(TripleTest, BitWidthChecks) {
   EXPECT_TRUE(T.isArch64Bit());
   EXPECT_TRUE(T.isRISCV());
 
-  T.setArch(Triple::sbf);
+  T.setArch(Triple::tbf);
   EXPECT_FALSE(T.isArch16Bit());
   EXPECT_FALSE(T.isArch32Bit());
   EXPECT_TRUE(T.isArch64Bit());
-  EXPECT_TRUE(T.isSBF());
+  EXPECT_TRUE(T.isTBF());
 
   T.setArch(Triple::csky);
   EXPECT_FALSE(T.isArch16Bit());
@@ -2098,9 +2098,9 @@ TEST(TripleTest, BitWidthArchVariants) {
   EXPECT_EQ(Triple::loongarch32, T.get32BitArchVariant().getArch());
   EXPECT_EQ(Triple::loongarch64, T.get64BitArchVariant().getArch());
 
-  T.setArch(Triple::sbf);
+  T.setArch(Triple::tbf);
   EXPECT_EQ(Triple::UnknownArch, T.get32BitArchVariant().getArch());
-  EXPECT_EQ(Triple::sbf, T.get64BitArchVariant().getArch());
+  EXPECT_EQ(Triple::tbf, T.get64BitArchVariant().getArch());
 
   T.setArch(Triple::thumbeb);
   EXPECT_EQ(Triple::thumbeb, T.get32BitArchVariant().getArch());
@@ -2192,9 +2192,9 @@ TEST(TripleTest, EndianArchVariants) {
   EXPECT_EQ(Triple::bpfeb, T.getBigEndianArchVariant().getArch());
   EXPECT_EQ(Triple::bpfel, T.getLittleEndianArchVariant().getArch());
 
-  T.setArch(Triple::sbf);
+  T.setArch(Triple::tbf);
   EXPECT_EQ(Triple::UnknownArch, T.getBigEndianArchVariant().getArch());
-  EXPECT_EQ(Triple::sbf, T.getLittleEndianArchVariant().getArch());
+  EXPECT_EQ(Triple::tbf, T.getLittleEndianArchVariant().getArch());
 
   T.setArch(Triple::mips64);
   EXPECT_EQ(Triple::mips64, T.getBigEndianArchVariant().getArch());

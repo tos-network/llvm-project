@@ -355,7 +355,7 @@ void ScalarEnumerationTraits<ELFYAML::ELF_EM>::enumeration(
   ECase(EM_RISCV);
   ECase(EM_LANAI);
   ECase(EM_BPF);
-  ECase(EM_SBF);
+  ECase(EM_TBF);
   ECase(EM_VE);
   ECase(EM_CSKY);
   ECase(EM_LOONGARCH);
@@ -941,8 +941,8 @@ void ScalarEnumerationTraits<ELFYAML::ELF_REL>::enumeration(
   case ELF::EM_BPF:
 #include "llvm/BinaryFormat/ELFRelocs/BPF.def"
     break;
-  case ELF::EM_SBF:
-#include "llvm/BinaryFormat/ELFRelocs/SBF.def"
+  case ELF::EM_TBF:
+#include "llvm/BinaryFormat/ELFRelocs/TBF.def"
     break;
   case ELF::EM_VE:
 #include "llvm/BinaryFormat/ELFRelocs/VE.def"

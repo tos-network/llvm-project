@@ -29,7 +29,7 @@
 // RUN: %clang_cc1 -no-enable-noundef-analysis -triple arm -O3 -disable-llvm-passes -emit-llvm -o - %s | FileCheck %s --check-prefixes=ARM
 // RUN: %clang_cc1 -no-enable-noundef-analysis -triple loongarch64 -O3 -disable-llvm-passes -emit-llvm -o - %s | FileCheck %s --check-prefixes=LA64
 // RUN: %clang_cc1 -no-enable-noundef-analysis -triple loongarch32 -O3 -disable-llvm-passes -emit-llvm -o - %s | FileCheck %s --check-prefixes=LA32
-// RUN: %clang_cc1 -no-enable-noundef-analysis -triple sbf -O3 -disable-llvm-passes -emit-llvm -o - %s | FileCheck %s --check-prefixes=SBF
+// RUN: %clang_cc1 -no-enable-noundef-analysis -triple tbf -O3 -disable-llvm-passes -emit-llvm -o - %s | FileCheck %s --check-prefixes=TBF
 
 // Make sure 128 and 64 bit versions are passed like integers.
 void ParamPassing(_BitInt(128) b, _BitInt(64) c) {}
@@ -62,7 +62,7 @@ void ParamPassing(_BitInt(128) b, _BitInt(64) c) {}
 // ARM: define{{.*}} arm_aapcscc void @ParamPassing(ptr byval(i128) align 8 %{{.+}}, i64 %{{.+}})
 // LA64: define{{.*}} void @ParamPassing(i128 %{{.+}}, i64 %{{.+}})
 // LA32: define{{.*}} void @ParamPassing(ptr %{{.+}}, i64 %{{.+}})
-// SBF: define{{.*}} void @ParamPassing(i128 %{{.+}}, i64 %{{.+}})
+// TBF: define{{.*}} void @ParamPassing(i128 %{{.+}}, i64 %{{.+}})
 
 void ParamPassing2(_BitInt(127) b, _BitInt(63) c) {}
 // LIN64: define{{.*}} void @ParamPassing2(i64 %{{.+}}, i64 %{{.+}}, i64 %{{.+}})
@@ -258,7 +258,7 @@ _BitInt(127) ReturnPassing3(void) { return 0; }
 // ARM: define{{.*}} arm_aapcscc void @ReturnPassing3(ptr dead_on_unwind noalias writable sret
 // LA64: define{{.*}} i127 @ReturnPassing3(
 // LA32: define{{.*}} void @ReturnPassing3(ptr dead_on_unwind noalias writable sret
-// SBF: define{{.*}} i127 @ReturnPassing3(
+// TBF: define{{.*}} i127 @ReturnPassing3(
 
 _BitInt(128) ReturnPassing4(void) { return 0; }
 // LIN64: define{{.*}} { i64, i64 } @ReturnPassing4(

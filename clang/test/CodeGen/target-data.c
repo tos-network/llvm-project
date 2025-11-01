@@ -265,9 +265,9 @@
 // RUN: FileCheck %s -check-prefix=BPFEB
 // BPFEB: target datalayout = "E-m:e-p:64:64-i64:64-i128:128-n32:64-S128"
 
-// RUN: %clang_cc1 -triple sbf -o - -emit-llvm %s | \
-// RUN: FileCheck %s -check-prefix=SBF
-// SBF: target datalayout = "e-m:e-p:64:64-i64:64-n32:64-S128"
+// RUN: %clang_cc1 -triple tbf -o - -emit-llvm %s | \
+// RUN: FileCheck %s -check-prefix=TBF
+// TBF: target datalayout = "e-m:e-p:64:64-i64:64-n32:64-S128"
 
 // RUN: %clang_cc1 -triple ve -o - -emit-llvm %s | \
 // RUN: FileCheck %s -check-prefix=VE

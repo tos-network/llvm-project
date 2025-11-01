@@ -2587,21 +2587,21 @@ static void disassembleObject(ObjectFile *Obj, bool InlineRelocs) {
     }
   }
 
-  // The SBF target specifies the cpu type as an ELF flag, which is not parsed automatically in LLVM objdump.
-  // We must set the CPU type here so that the disassembler can decode the newer SBF features correctly.
-  if (MCPU.empty() && Obj->isELF() && Obj->getArch() == Triple::sbf) {
+  // The TBF target specifies the cpu type as an ELF flag, which is not parsed automatically in LLVM objdump.
+  // We must set the CPU type here so that the disassembler can decode the newer TBF features correctly.
+  if (MCPU.empty() && Obj->isELF() && Obj->getArch() == Triple::tbf) {
     const auto *Elf64 = dyn_cast<ELF64LEObjectFile>(Obj);
     switch (Elf64->getPlatformFlags()) {
-      case llvm::ELF::EF_SBF_V1:
+      case llvm::ELF::EF_TBF_V1:
         MCPU = "v1";
         break;
-      case llvm::ELF::EF_SBF_V2:
+      case llvm::ELF::EF_TBF_V2:
         MCPU = "v2";
         break;
-      case llvm::ELF::EF_SBF_V3:
+      case llvm::ELF::EF_TBF_V3:
         MCPU = "v3";
         break;
-      case llvm::ELF::EF_SBF_V4:
+      case llvm::ELF::EF_TBF_V4:
         MCPU = "v4";
         break;
       default:
