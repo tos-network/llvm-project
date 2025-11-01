@@ -362,7 +362,7 @@ static uint32_t subTypeFromElfHeader(const elf::ELFHeader &header) {
     return loongarchVariantFromElfFlags(header);
   else if (header.e_machine == llvm::ELF::EM_BPF)
     return sbfVariantFromElfFlags(header);
-  else if (header.e_machine == llvm::ELF::EM_SBF)
+  else if (header.e_machine == llvm::ELF::EM_TBF)
     return sbfVariantFromElfFlags(header);
 
   return LLDB_INVALID_CPUTYPE;
