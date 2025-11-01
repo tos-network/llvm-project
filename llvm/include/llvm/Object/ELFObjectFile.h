@@ -1435,7 +1435,7 @@ template <class ELFT> Triple::ArchType ELFObjectFile<ELFT>::getArch() const {
   case ELF::EM_BPF:
     return IsLittleEndian ? Triple::bpfel : Triple::bpfeb;
   case ELF::EM_TBF:
-    return Triple::sbf;
+    return Triple::tbf;
 
   case ELF::EM_VE:
     return Triple::ve;

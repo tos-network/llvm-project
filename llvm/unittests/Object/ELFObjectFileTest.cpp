@@ -232,12 +232,12 @@ TEST(ELFObjectFileTest, MachineTestForBPF) {
     checkFormatAndArch(Data, Formats[Idx], Archs[Idx]);
 }
 
-TEST(ELFObjectFileTest, MachineTestForSBF) {
+TEST(ELFObjectFileTest, MachineTestForTBF) {
   std::array<StringRef, 4> Formats = {"elf32-unknown", "elf32-unknown",
-                                      "elf64-sbf", "elf64-sbf"};
+                                      "elf64-tbf", "elf64-tbf"};
   size_t I = 0;
   for (const DataForTest &D : generateData(ELF::EM_TBF))
-    checkFormatAndArch(D, Formats[I++], Triple::sbf);
+    checkFormatAndArch(D, Formats[I++], Triple::tbf);
 }
 
 TEST(ELFObjectFileTest, MachineTestForAVR) {

@@ -1091,15 +1091,15 @@ void BTFDebug::emitBTFExtSection() {
   uint32_t FieldRelocLen = 0;
   for (const auto &FuncSec : FuncInfoTable) {
     FuncLen += BTF::SecFuncInfoSize;
-    FuncLen += FuncSec.second.size() * BTF::TBFFuncInfoSize;
+    FuncLen += FuncSec.second.size() * BTF::SBFFuncInfoSize;
   }
   for (const auto &LineSec : LineInfoTable) {
     LineLen += BTF::SecLineInfoSize;
-    LineLen += LineSec.second.size() * BTF::TBFLineInfoSize;
+    LineLen += LineSec.second.size() * BTF::SBFLineInfoSize;
   }
   for (const auto &FieldRelocSec : FieldRelocTable) {
     FieldRelocLen += BTF::SecFieldRelocSize;
-    FieldRelocLen += FieldRelocSec.second.size() * BTF::TBFFieldRelocSize;
+    FieldRelocLen += FieldRelocSec.second.size() * BTF::SBFFieldRelocSize;
   }
 
   if (FieldRelocLen)
@@ -1114,7 +1114,7 @@ void BTFDebug::emitBTFExtSection() {
 
   // Emit func_info table.
   OS.AddComment("FuncInfo");
-  OS.emitInt32(BTF::TBFFuncInfoSize);
+  OS.emitInt32(BTF::SBFFuncInfoSize);
   for (const auto &FuncSec : FuncInfoTable) {
     OS.AddComment("FuncInfo section string offset=" +
                   std::to_string(FuncSec.first));
@@ -1128,7 +1128,7 @@ void BTFDebug::emitBTFExtSection() {
 
   // Emit line_info table.
   OS.AddComment("LineInfo");
-  OS.emitInt32(BTF::TBFLineInfoSize);
+  OS.emitInt32(BTF::SBFLineInfoSize);
   for (const auto &LineSec : LineInfoTable) {
     OS.AddComment("LineInfo section string offset=" +
                   std::to_string(LineSec.first));
@@ -1147,7 +1147,7 @@ void BTFDebug::emitBTFExtSection() {
   // Emit field reloc table.
   if (FieldRelocLen) {
     OS.AddComment("FieldReloc");
-    OS.emitInt32(BTF::TBFFieldRelocSize);
+    OS.emitInt32(BTF::SBFFieldRelocSize);
     for (const auto &FieldRelocSec : FieldRelocTable) {
       OS.AddComment("Field reloc section string offset=" +
                     std::to_string(FieldRelocSec.first));
