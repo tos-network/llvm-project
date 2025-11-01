@@ -249,7 +249,7 @@ bool ELFNote::Parse(const DataExtractor &data, lldb::offset_t *offset) {
   return true;
 }
 
-static uint32_t sbfVariantFromElfFlags(const elf::ELFHeader &header) {
+static uint32_t tbfVariantFromElfFlags(const elf::ELFHeader &header) {
   switch (header.e_flags) {
   case llvm::ELF::EF_TBF_V0:
     return ArchSpec::eTBFSubType_tbfv0;
@@ -361,9 +361,9 @@ static uint32_t subTypeFromElfHeader(const elf::ELFHeader &header) {
   else if (header.e_machine == llvm::ELF::EM_LOONGARCH)
     return loongarchVariantFromElfFlags(header);
   else if (header.e_machine == llvm::ELF::EM_BPF)
-    return sbfVariantFromElfFlags(header);
+    return tbfVariantFromElfFlags(header);
   else if (header.e_machine == llvm::ELF::EM_TBF)
-    return sbfVariantFromElfFlags(header);
+    return tbfVariantFromElfFlags(header);
 
   return LLDB_INVALID_CPUTYPE;
 }
