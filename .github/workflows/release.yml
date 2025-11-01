@@ -1,0 +1,212 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'tos-tools-v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name for the release'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-22.04
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_version: ${{ steps.get_version.outputs.version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.tag }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_name: Release ${{ steps.get_version.outputs.version }}
+          body: |
+            ## TOS Network LLVM Tools Release ${{ steps.get_version.outputs.version }}
+
+            This release includes the LLVM toolchain with TBF (TOS Bytecode Format) support.
+
+            ### Changes
+            - See commit history for detailed changes
+
+            ### Downloads
+            Binary packages for different platforms will be available below.
+          draft: false
+          prerelease: false
+
+  build-linux:
+    name: Build Linux (x86_64)
+    needs: create-release
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            ninja-build \
+            build-essential \
+            python3 \
+            zlib1g-dev
+
+      - name: Configure CMake
+        run: |
+          mkdir -p build
+          cmake -G Ninja \
+            -S llvm \
+            -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$PWD/install \
+            -DLLVM_ENABLE_PROJECTS="clang;lld" \
+            -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="BPF;TBF" \
+            -DLLVM_TARGETS_TO_BUILD="X86" \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DLLVM_ENABLE_ASSERTIONS=OFF
+
+      - name: Build
+        run: |
+          ninja -C build
+          ninja -C build install
+
+      - name: Create tarball
+        run: |
+          cd install
+          tar -czf ../tos-llvm-${{ needs.create-release.outputs.release_version }}-linux-x86_64.tar.gz *
+          cd ..
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./tos-llvm-${{ needs.create-release.outputs.release_version }}-linux-x86_64.tar.gz
+          asset_name: tos-llvm-${{ needs.create-release.outputs.release_version }}-linux-x86_64.tar.gz
+          asset_content_type: application/gzip
+
+  build-macos:
+    name: Build macOS (x86_64)
+    needs: create-release
+    runs-on: macos-13
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja
+
+      - name: Configure CMake
+        run: |
+          mkdir -p build
+          cmake -G Ninja \
+            -S llvm \
+            -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$PWD/install \
+            -DLLVM_ENABLE_PROJECTS="clang;lld" \
+            -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="BPF;TBF" \
+            -DLLVM_TARGETS_TO_BUILD="X86" \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DLLVM_ENABLE_ASSERTIONS=OFF
+
+      - name: Build
+        run: |
+          ninja -C build
+          ninja -C build install
+
+      - name: Create tarball
+        run: |
+          cd install
+          tar -czf ../tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-x86_64.tar.gz *
+          cd ..
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-x86_64.tar.gz
+          asset_name: tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-x86_64.tar.gz
+          asset_content_type: application/gzip
+
+  build-macos-arm:
+    name: Build macOS (ARM64)
+    needs: create-release
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja
+
+      - name: Configure CMake
+        run: |
+          mkdir -p build
+          cmake -G Ninja \
+            -S llvm \
+            -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$PWD/install \
+            -DLLVM_ENABLE_PROJECTS="clang;lld" \
+            -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="BPF;TBF" \
+            -DLLVM_TARGETS_TO_BUILD="X86;AArch64" \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DLLVM_ENABLE_ASSERTIONS=OFF
+
+      - name: Build
+        run: |
+          ninja -C build
+          ninja -C build install
+
+      - name: Create tarball
+        run: |
+          cd install
+          tar -czf ../tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-arm64.tar.gz *
+          cd ..
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-arm64.tar.gz
+          asset_name: tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-arm64.tar.gz
+          asset_content_type: application/gzip
