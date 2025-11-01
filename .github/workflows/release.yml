@@ -20,7 +20,6 @@ jobs:
     name: Create Release
     runs-on: ubuntu-22.04
     outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
       release_version: ${{ steps.get_version.outputs.version }}
 
     steps:
@@ -41,25 +40,31 @@ jobs:
           echo "Release version: $VERSION"
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
-          body: |
-            ## TOS Network LLVM Tools Release ${{ steps.get_version.outputs.version }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
 
-            This release includes the LLVM toolchain with TBF (TOS Bytecode Format) support.
+          # Create tag if it doesn't exist (for workflow_dispatch)
+          if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
+            git tag "$VERSION"
+            git push origin "$VERSION"
+          fi
 
-            ### Changes
-            - See commit history for detailed changes
+          # Create release
+          gh release create "$VERSION" \
+            --title "Release $VERSION" \
+            --notes "## TOS Network LLVM Tools Release $VERSION
 
-            ### Downloads
-            Binary packages for different platforms will be available below.
-          draft: false
-          prerelease: false
+          This release includes the LLVM toolchain with TBF (TOS Bytecode Format) support.
+
+          ### Changes
+          - See commit history for detailed changes
+
+          ### Downloads
+          Binary packages for different platforms will be available below." \
+            || echo "Release already exists"
 
   build-linux:
     name: Build Linux (x86_64)
@@ -106,14 +111,13 @@ jobs:
           cd ..
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./tos-llvm-${{ needs.create-release.outputs.release_version }}-linux-x86_64.tar.gz
-          asset_name: tos-llvm-${{ needs.create-release.outputs.release_version }}-linux-x86_64.tar.gz
-          asset_content_type: application/gzip
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release upload ${{ needs.create-release.outputs.release_version }} \
+            ./tos-llvm-${{ needs.create-release.outputs.release_version }}-linux-x86_64.tar.gz \
+            --clobber
 
   build-macos:
     name: Build macOS (x86_64)
@@ -154,11 +158,10 @@ jobs:
           cd ..
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-x86_64.tar.gz
-          asset_name: tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-x86_64.tar.gz
-          asset_content_type: application/gzip
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release upload ${{ needs.create-release.outputs.release_version }} \
+            ./tos-llvm-${{ needs.create-release.outputs.release_version }}-macos-x86_64.tar.gz \
+            --clobber
