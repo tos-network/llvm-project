@@ -103,10 +103,10 @@ jobs:
           ./configure
           sudo make install
       - name: Download source code
-        uses: llvm/actions/get-llvm-project-src@main
+        uses: actions/checkout@v4
         with:
           ref: ${{ matrix.ref }}
-          repo: ${{ matrix.repo }}
+          repository: ${{ matrix.repo }}
       - name: Configure
         run: |
           mkdir install
