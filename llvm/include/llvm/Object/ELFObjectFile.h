@@ -1344,7 +1344,7 @@ StringRef ELFObjectFile<ELFT>::getFileFormatName() const {
     case ELF::EM_BPF:
       return "elf64-bpf";
     case ELF::EM_TBF:
-      return "elf64-sbf";
+      return "elf64-tbf";
     case ELF::EM_VE:
       return "elf64-ve";
     case ELF::EM_LOONGARCH:
