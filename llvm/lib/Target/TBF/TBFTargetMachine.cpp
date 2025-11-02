@@ -49,7 +49,7 @@ static std::string computeDataLayout(const Triple &TT, StringRef FS) {
   // TOOD: jle; specialize this (and elsewhere) to tos-only once the new
   // back-end is integrated; e.g. we won't need Istos, etc.
   assert(TT.getArch() == Triple::tbf && "expected Triple::tbf");
-  return "e-m:e-p:64:64-i64:64-n32:64-S128";
+  return "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128";
 }
 
 static Reloc::Model getEffectiveRelocModel(std::optional<Reloc::Model> RM) {
